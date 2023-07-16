@@ -13,18 +13,21 @@ export class SignalService {
     }
   }
  
-  updateSignalValue(key:string ,newValue: string): void {
-    if (!this.signals[key]) {
+  updateSignalValue(key: string, newValue: string): void {
+    const signal = this.signals[key];
+    if (!signal) {
       this.signals[key] = new BehaviorSubject<string>(newValue);
     } else {
-      this.signals[key].next(newValue);
+      signal.next(newValue);
     }
   }
 
   subscribeToSignal(signalName: string): Subject<any> {
-    if (!this.signals[signalName]) {
-      this.signals[signalName] = new Subject<any>();
+    let signal = this.signals[signalName];
+    if (!signal) {
+      signal = new Subject<any>();
+      this.signals[signalName] = signal;
     }
-    return this.signals[signalName];
+    return signal;
   }
 }
